@@ -73,9 +73,8 @@ async def pastis(ctx):
 
 @bot.command()
 async def boulette(ctx):
-    embed = discord.Embed(description="💥 Oh là là... LA BOULETTE !")
-    embed.set_image(url="https://media.tenor.com/BmFLBYjXRMwAAAAC/oh-la-boulette-as-de-la-jungle.gif")
-    await ctx.send(embed=embed)
+    await ctx.send("💥 Oh là là... LA BOULETTE !")
+    await ctx.send("https://tenor.com/view/oh-la-boulette-as-de-la-jungle-roger-roger-le-jardinier-gif-11065058356198134565")
 
 @bot.command()
 async def filsdelapub(ctx):
