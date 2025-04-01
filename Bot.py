@@ -45,7 +45,7 @@ punchlines = [
 async def on_ready():
     print(f"✅ Hadès le Beauf connecté en tant que {bot.user}")
 
-# ========== COMMANDES DE BASE ==========
+# ========== COMMANDES ==========
 @bot.command()
 async def ping(ctx):
     await ctx.send("T’as pingé ? J’suis là cousin 🧢")
@@ -73,8 +73,7 @@ async def pastis(ctx):
 
 @bot.command()
 async def boulette(ctx):
-    await ctx.send("💥 Oh là là... LA BOULETTE !")
-    await ctx.send("https://tenor.com/view/oh-la-boulette-as-de-la-jungle-roger-roger-le-jardinier-gif-11065058356198134565")
+    await ctx.send("💥 Oh là là... LA BOULETTE !\nhttps://media.tenor.com/BmFLBYjXRMwAAAAC/oh-la-boulette-as-de-la-jungle.gif")
 
 @bot.command()
 async def filsdelapub(ctx):
@@ -88,16 +87,13 @@ async def filsdelapub(ctx):
 
 @bot.command()
 async def bouteille(ctx):
-    guild = ctx.guild
-    membres = [m for m in guild.members if not m.bot]
-
+    membres = [m for m in ctx.guild.members if not m.bot]
     if len(membres) < 2:
         await ctx.send("Y’a pas assez de monde pour jouer, appelle tes potes !")
         return
 
     cible = random.choice(membres)
-
-    gages = [
+    gages_roulette = [
         "Fais un compliment au premier membre qui parle.",
         "Dis ton plus grand secret (ou invente un gros mytho).",
         "Change ton pseudo en 'Patate Sexy' pendant 10 minutes.",
@@ -106,9 +102,7 @@ async def bouteille(ctx):
         "Balance une anecdote gênante (vraie ou fausse).",
         "Offre un gif ridicule au membre de ton choix."
     ]
-
-    gage = random.choice(gages)
-
+    gage = random.choice(gages_roulette)
     await ctx.send(f"🍾 La bouteille tourne sur le comptoir... et PAF ! Elle pointe **{cible.mention}** !\n💥 Gage : **{gage}**")
 
 @bot.command()
