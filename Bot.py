@@ -221,7 +221,15 @@ async def setup_roles(ctx):
         await ctx.send("✅ Réactions ajoutées sur les 3 messages, chef !")
     except Exception as e:
         await ctx.send(f"❌ Oups, j'ai raté un truc : {e}")
-
+@bot.event
+async def on_member_join(member):
+    role_id = 1356304122118148263  # ID du rôle 'invité'
+    role = member.guild.get_role(role_id)
+    if role:
+        await member.add_roles(role)
+        print(f"✅ Rôle 'invité' donné à {member.display_name}")
+    else:
+        print("❌ Rôle 'invité' introuvable.")
 # ========== LANCEMENT ==========
 if TOKEN:
     bot.run(TOKEN)
