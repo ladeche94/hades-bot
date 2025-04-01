@@ -73,9 +73,8 @@ async def pastis(ctx):
 
 @bot.command()
 async def boulette(ctx):
-    embed = discord.Embed(description="💥 Oh là là... LA BOULETTE !")
-    embed.set_image(url="https://media.tenor.com/BmFLBYjXRMwAAAAC/oh-la-boulette-as-de-la-jungle.gif")
-    await ctx.send(embed=embed)
+    await ctx.send("💥 Oh là là... LA BOULETTE !")
+    await ctx.send("https://media.tenor.com/BmFLBYjXRMwAAAAC/oh-la-boulette-as-de-la-jungle.gif")
 
 @bot.command()
 async def filsdelapub(ctx):
@@ -110,57 +109,6 @@ async def bouteille(ctx):
 @bot.command()
 async def beauf(ctx):
     await ctx.send("🧀 " + random.choice(punchlines))
-
-# ========== MUSIQUE ==========
-ytdl_format_options = {
-    'format': 'bestaudio/best',
-    'noplaylist': True,
-}
-ffmpeg_options = {
-    'options': '-vn'
-}
-ytdl = youtube_dl.YoutubeDL(ytdl_format_options)
-
-@bot.command()
-async def play(ctx, url: str):
-    if ctx.author.voice is None:
-        return await ctx.send("❌ Monte dans le vocal d'abord frérot 😤")
-
-    channel = ctx.author.voice.channel
-    voice_client = ctx.voice_client
-
-    if voice_client is None:
-        try:
-            voice_client = await channel.connect()
-            await ctx.send("🎤 J’fais mon entrée dans le vocal, comme une légende.")
-        except Exception as e:
-            await ctx.send(f"❌ J’ai pas réussi à rentrer : {e}")
-            return
-
-    try:
-        data = await bot.loop.run_in_executor(None, lambda: ytdl.extract_info(url, download=True))
-        if 'entries' in data:
-            data = data['entries'][0]
-
-        filename = ytdl.prepare_filename(data)
-        title = data.get('title', 'Musique inconnue')
-
-        if filename:
-            source = discord.FFmpegPCMAudio(filename)
-            voice_client.play(source)
-            await ctx.send(f"🎶 ENVOYÉÉÉÉ : **{title}** 🔊🔥")
-        else:
-            await ctx.send("❌ Fichier audio perdu dans les méandres du web.")
-
-    except Exception as e:
-        await ctx.send(f"❌ J’ai pété un câble en lançant la musique : {e}")
-
-@bot.command()
-async def stop(ctx):
-    voice_client = ctx.voice_client
-    if voice_client:
-        await voice_client.disconnect()
-        await ctx.send("🛑 Stop ! L’ambiance est morte. Qui a fait ça ? 😩")
 
 # ========== GESTION DES RÔLES PAR RÉACTIONS ==========
 roles_rencontre = {
