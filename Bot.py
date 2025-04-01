@@ -83,20 +83,16 @@ async def filsdelapub(ctx):
 
 @bot.command()
 async def bouteille(ctx):
-    voice = ctx.author.voice
+    membres = [m for m in ctx.guild.members if not m.bot and m.status != discord.Status.offline]
 
-    if not voice or not voice.channel:
-        return await ctx.send("❌ T'es même pas dans un vocal frérot… Vas t’installer au bar d’abord 🍷")
+    if len(membres) < 2:
+        return await ctx.send("🙄 Y’a pas assez de monde pour jouer, appelle tes potes !")
 
-    members = [m for m in voice.channel.members if not m.bot]
-
-    if len(members) < 2:
-        return await ctx.send("🙄 Y’a pas assez de monde pour tourner la bouteille, appelle tes potes !")
-
-    choisi = random.choice(members)
+    choisi = random.choice(membres)
     gage = random.choice(gages)
 
-    await ctx.send(f"🍾 La bouteille tourne... tourne... et BIM ! C’est **{choisi.mention}** qui trinque !\n💥 Gage : **{gage}**")
+    await ctx.send(f"🍾 La bouteille tourne sur le comptoir... et PAF ! Elle pointe **{choisi.mention}** !\n💥 Gage : **{gage}**")
+
 
 @bot.command()
 async def beauf(ctx):
