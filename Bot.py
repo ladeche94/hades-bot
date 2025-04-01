@@ -72,6 +72,11 @@ async def pastis(ctx):
     await ctx.send("🥃 Pastis 51, température ambiante, c’est comme ça qu’on aime.")
 
 @bot.command()
+async def boulette(ctx):
+    await ctx.send("💥 Oh là là... LA BOULETTE !")
+    await ctx.send("https://tenor.com/view/oh-la-boulette-as-de-la-jungle-roger-roger-le-jardinier-gif-11065058356198134565")
+
+@bot.command()
 async def filsdelapub(ctx):
     phrases_pub = [
         "Y'a ceux qui roulent... et ceux qui brillent ✨",
@@ -83,15 +88,28 @@ async def filsdelapub(ctx):
 
 @bot.command()
 async def bouteille(ctx):
-    membres = [m for m in ctx.guild.members if not m.bot and m.status != discord.Status.offline]
+    guild = ctx.guild
+    membres = [m for m in guild.members if not m.bot]
 
     if len(membres) < 2:
-        return await ctx.send("🙄 Y’a pas assez de monde pour jouer, appelle tes potes !")
+        await ctx.send("Y’a pas assez de monde pour jouer, appelle tes potes !")
+        return
 
-    choisi = random.choice(membres)
+    cible = random.choice(membres)
+
+    gages = [
+        "Fais un compliment au premier membre qui parle.",
+        "Dis ton plus grand secret (ou invente un gros mytho).",
+        "Change ton pseudo en 'Patate Sexy' pendant 10 minutes.",
+        "Fais une déclaration d’amour à la personne de ton choix.",
+        "Écris un poème avec le mot ‘chipolata’.",
+        "Balance une anecdote gênante (vraie ou fausse).",
+        "Offre un gif ridicule au membre de ton choix."
+    ]
+
     gage = random.choice(gages)
 
-    await ctx.send(f"🍾 La bouteille tourne sur le comptoir... et PAF ! Elle pointe **{choisi.mention}** !\n💥 Gage : **{gage}**")
+    await ctx.send(f"🍾 La bouteille tourne sur le comptoir... et PAF ! Elle pointe **{cible.mention}** !\n💥 Gage : **{gage}**")
 
 @bot.command()
 async def beauf(ctx):
