@@ -6,6 +6,19 @@ import os
 import yt_dlp as youtube_dl
 import random
 
+gages = [
+    "Chante le refrain de ta chanson honteuse préférée 🎤",
+    "Avoue un crush Discord dans le chat 👀",
+    "Balance un secret que personne ne connaît 🤫",
+    "Raconte la dernière fois que t’as eu honte 😳",
+    "Dis à voix haute ton dernier message privé 🥵",
+    "Fais une déclaration d'amour au prochain qui parle ❤️",
+    "Change ton pseudo en 'Beauf suprême' pendant 24h 🧀",
+    "Tu dois répondre OUI à tout pendant 10 minutes 🔥",
+    "Fais un compliment cringe à quelqu’un ici 💋",
+    "Tu dois mettre un emoji 🍆 dans ton pseudo pendant 30 minutes"
+]
+
 # Charger le token depuis les variables d'environnement
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
@@ -67,6 +80,23 @@ async def filsdelapub(ctx):
         "Une bière. Un ami. Le silence. Le respect. 🍺"
     ]
     await ctx.send(random.choice(phrases_pub))
+
+@bot.command()
+async def bouteille(ctx):
+    voice = ctx.author.voice
+
+    if not voice or not voice.channel:
+        return await ctx.send("❌ T'es même pas dans un vocal frérot… Vas t’installer au bar d’abord 🍷")
+
+    members = [m for m in voice.channel.members if not m.bot]
+
+    if len(members) < 2:
+        return await ctx.send("🙄 Y’a pas assez de monde pour tourner la bouteille, appelle tes potes !")
+
+    choisi = random.choice(members)
+    gage = random.choice(gages)
+
+    await ctx.send(f"🍾 La bouteille tourne... tourne... et BIM ! C’est **{choisi.mention}** qui trinque !\n💥 Gage : **{gage}**")
 
 @bot.command()
 async def beauf(ctx):
