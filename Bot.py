@@ -1,3 +1,4 @@
+# main.py
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -140,18 +141,18 @@ roles_orientation = {
 }
 
 roles_astrologie = {
-    "♈️": 1356354469113364510,
-    "♐️": 1356354566370623648,
-    "♎️": 1356354767462596658,
-    "♍️": 1356354812995834188,
-    "♒️": 1356354921523445934,
-    "♌️": 1356355047935447261,
-    "♑️": 1356355094513188924,
-    "♋️": 1356355158144974898,
-    "♏️": 1356355212943556689,
-    "♓️": 1356355270501994799,
-    "♊️": 1356355325552234599,
-    "♉️": 1356355392371818718
+    "♈": 1356354469113364510,
+    "♉": 1356355392371818718,
+    "♊": 1356355325552234599,
+    "♋": 1356355158144974898,
+    "♌": 1356355047935447261,
+    "♍": 1356354812995834188,
+    "♎": 1356354767462596658,
+    "♏": 1356355212943556689,
+    "♐": 1356354566370623648,
+    "♑": 1356355094513188924,
+    "♒": 1356354921523445934,
+    "♓": 1356355270501994799
 }
 
 message_rencontre = 1356365273082499363
@@ -221,6 +222,7 @@ async def setup_roles(ctx):
         await ctx.send("✅ Réactions ajoutées sur les 3 messages, chef !")
     except Exception as e:
         await ctx.send(f"❌ Oups, j'ai raté un truc : {e}")
+
 @bot.event
 async def on_member_join(member):
     role_id = 1356304122118148263  # ID du rôle 'invité'
@@ -230,6 +232,7 @@ async def on_member_join(member):
         print(f"✅ Rôle 'invité' donné à {member.display_name}")
     else:
         print("❌ Rôle 'invité' introuvable.")
+
 # ========== LANCEMENT ==========
 if TOKEN:
     bot.run(TOKEN)
