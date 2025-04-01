@@ -93,7 +93,6 @@ async def bouteille(ctx):
 
     await ctx.send(f"🍾 La bouteille tourne sur le comptoir... et PAF ! Elle pointe **{choisi.mention}** !\n💥 Gage : **{gage}**")
 
-
 @bot.command()
 async def beauf(ctx):
     await ctx.send("🧀 " + random.choice(punchlines))
