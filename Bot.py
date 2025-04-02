@@ -149,7 +149,7 @@ async def beauf(ctx):
 async def disquette(ctx):
     phrase = random.choice(disquettes)
     await ctx.send(f"💿 {phrase}")
-    await ctx.send("https://media.tenor.com/l9-yY1scnPIAAAAC/draguer-mdr.gif")
+    await ctx.send("https://tenor.com/view/anime-diskette-floppy-computer-insert-gif-16902274")
 
 # ========== GESTION DES RÔLES PAR RÉACTIONS ==========
 roles_rencontre = {
