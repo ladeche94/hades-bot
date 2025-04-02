@@ -64,6 +64,21 @@ intents.reactions = True
 
 bot = commands.Bot(command_prefix="!", intents=intents)
 
+# ========== PHRASES DE BEAUF ==========
+punchlines = [
+    "Si t'as pas de pastis, t'as raté ta vie.",
+    "J’roule en Clio, j’fais danser les mégots.",
+    "Apéro sans cacahuètes ? Crime de guerre.",
+    "On respecte les gens... sauf ceux qui mettent du jus d’orange dans leur bière.",
+    "T'as le flow d'une 206 tunée, c’est du bon."
+]
+
+# ========== BOT READY ==========
+@bot.event
+async def on_ready():
+    print(f"✅ Hadès le Beauf connecté en tant que {bot.user}")
+
+# ========== COMMANDES ==========
 @bot.command()
 async def help(ctx):
     embed = discord.Embed(title="📜 Commandes de Hadès", color=discord.Color.gold())
@@ -80,21 +95,6 @@ async def help(ctx):
     embed.add_field(name="✨ Réponses automatiques", value="\- "santé" → "Mais pas des pieds 🍻"\n\- "verre" → "Mais pas plus haut que le bord 🥂"", inline=False)
     await ctx.send(embed=embed)
 
-# ========== PHRASES DE BEAUF ==========
-punchlines = [
-    "Si t'as pas de pastis, t'as raté ta vie.",
-    "J’roule en Clio, j’fais danser les mégots.",
-    "Apéro sans cacahuètes ? Crime de guerre.",
-    "On respecte les gens... sauf ceux qui mettent du jus d’orange dans leur bière.",
-    "T'as le flow d'une 206 tunée, c’est du bon."
-]
-
-# ========== BOT READY ==========
-@bot.event
-async def on_ready():
-    print(f"✅ Hadès le Beauf connecté en tant que {bot.user}")
-
-# ========== COMMANDES ==========
 @bot.command()
 async def ping(ctx):
     await ctx.send("T’as pingé ? J’suis là cousin 🧢")
