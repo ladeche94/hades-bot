@@ -150,6 +150,24 @@ async def pub(ctx):
     await ctx.send(random.choice(phrases_pub))
 
 @bot.command()
+async def lovecalc(ctx, user1: discord.Member, user2: discord.Member):
+    pourcentage = random.randint(0, 100)
+
+    if pourcentage >= 90:
+        commentaire = "🔥 Vous êtes comme une merguez et un barbecue : inséparables et bien grillés."
+    elif pourcentage >= 70:
+        commentaire = "❤️ Vous êtes comme le pastis et l’eau – à consommer sans modération."
+    elif pourcentage >= 50:
+        commentaire = "💘 Y’a du potentiel, mais faudra bosser le romantisme mon reuf."
+    elif pourcentage >= 30:
+        commentaire = "😬 C’est pas fou... mais avec un apéro, tout est possible."
+    else:
+        commentaire = "❌ Comme deux bouteilles vides : y’a plus rien à faire..."
+
+    await ctx.send(f"💘 Calcul en cours pour {user1.display_name} et {user2.display_name}...")
+    await ctx.send(f"❤️ Résultat : **{pourcentage}%** de compatibilité !\n{commentaire}")
+
+@bot.command()
 async def bouteille(ctx):
     membres = [m for m in ctx.guild.members if not m.bot]
     if len(membres) < 2:
