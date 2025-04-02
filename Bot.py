@@ -16,7 +16,42 @@ gages = [
     "Change ton pseudo en 'Beauf suprême' pendant 24h 🧀",
     "Tu dois répondre OUI à tout pendant 10 minutes 🔥",
     "Fais un compliment cringe à quelqu’un ici 💋",
-    "Tu dois mettre un emoji 🍆 dans ton pseudo pendant 30 minutes"
+    "Tu dois mettre un emoji 🍆 dans ton pseudo pendant 30 minutes",
+    "Compliment spontané : Offrez un compliment sincère à la personne désignée par la bouteille.",
+    "Regard prolongé : Maintenez un contact visuel avec cette personne pendant 30 secondes.",
+    "Danse improvisée : Invitez la personne à une danse rapide et légère, sans musique.",
+    "Question personnelle : Posez une question simple pour mieux connaître l’autre, comme “Quel est ton film préféré ?”",
+    "Surnom affectueux : Inventez un surnom amical pour la personne et utilisez-le pendant le reste du jeu.",
+    "Histoire partagée : Racontez une anecdote amusante ou touchante sur une expérience passée.",
+    "Dessin rapide : Dessinez un petit portrait de la personne en une minute et montrez-lui le résultat.",
+    "Déclaration fictive : Faites une déclaration d’amour exagérée et humoristique à la personne.",
+    "Chanson dédiée : Chantez une courte chanson ou fredonnez un air en dédiant votre performance à la personne.",
+    "Souvenir partagé : Évoquez un souvenir ou une expérience que vous aimeriez partager avec la personne à l’avenir."
+]
+
+# Nouvelles disquettes (phrases de drague)
+disquettes = [
+    "Es-tu affectée par le réchauffement climatique ? Car, t'es trop hot.",
+    "Salut ça te dirait un date un bowling ? Parce que au moins si on rentre pas ensemble j’aurais mis mes doigts dans un trou.",
+    "Je te trouve un peu froide, attend que j'abbate le mur entre nous.",
+    "T'es vraiment trop une bombe, tu veux pas m'exploser comme le mur de Berlin ?",
+    "Es-tu un prêt bancaire ? Parce que tu as capté mon intérêt !",
+    "Tu crois à l’amour au premier regard ou je dois repasser une seconde fois ?",
+    "J’aimerais être bigleux pour pouvoir te voir en double.",
+    "Tu sais que t’es physiquement intelligente toi.",
+    "Tu es prise ? Ça tombe bien je travaille chez EDF et je suis multiprise !",
+    "T'es comme une biscotte... T'es craquante.",
+    "Tu ne dois sûrement pas embrasser des inconnus alors faisons connaissance.",
+    "Si t'étais un sandwich à McDonalds, tu serais le Mc-nifique !",
+    "T'as des dents tellement belles on dirait des fausses.",
+    "Eh t'es charmante ! ça t'dirait une glace à la menthe?!",
+    "Attends, t'as fait tomber un truc... Tiens, c'est mon numéro !",
+    "Excuse-moi, tu sais que ton corps est composé à plus de 60% d'eau ? Parce qu'il se trouve que j'ai soif.",
+    "Tu veux que je te fasses un tour de magie ? Viens, je vais te montrer ma baguette !",
+    "Les roses sont rouges, Les violettes sont bleues, Le fleuriste est daltonien, Mais moi j'ai un bon coup de rein.",
+    "Pas la peine d'essayer de te débattre, l'amour est plus fort que nous.",
+    "La différence entre ma voiture et toi, c'est que toi t'as pas besoin de néons pour briller.",
+    "J'ai besoin d'un bouche à bouche car je viens de me noyer dans votre regard."
 ]
 
 # Charger le token depuis les variables d'environnement
@@ -30,7 +65,6 @@ intents.members = True
 intents.reactions = True
 
 bot = commands.Bot(command_prefix="!", intents=intents)
-
 # ========== PHRASES DE BEAUF ==========
 punchlines = [
     "Si t'as pas de pastis, t'as raté ta vie.",
@@ -68,16 +102,12 @@ async def apero(ctx):
     await ctx.send("🍻 Apéééééroooo mon reuf ! Qui ramène les chips ?")
 
 @bot.command()
-async def pastis(ctx):
-    await ctx.send("🥃 Pastis 51, température ambiante, c’est comme ça qu’on aime.")
-
-@bot.command()
 async def boulette(ctx):
     await ctx.send("💥 Oh là là... LA BOULETTE !")
-    await ctx.send("https://tenor.com/view/oh-la-boulette-as-de-la-jungle-roger-roger-le-jardinier-gif-11065058356198134565")
+    await ctx.send("https://media.tenor.com/BmFLBYjXRMwAAAAC/oh-la-boulette-as-de-la-jungle.gif")
 
 @bot.command()
-async def filsdelapub(ctx):
+async def pub(ctx):
     phrases_pub = [
         "Y'a ceux qui roulent... et ceux qui brillent ✨",
         "C’est pas une voiture, c’est une légende.",
@@ -94,21 +124,18 @@ async def bouteille(ctx):
         return
 
     cible = random.choice(membres)
-    gages_roulette = [
-        "Fais un compliment au premier membre qui parle.",
-        "Dis ton plus grand secret (ou invente un gros mytho).",
-        "Change ton pseudo en 'Patate Sexy' pendant 10 minutes.",
-        "Fais une déclaration d’amour à la personne de ton choix.",
-        "Écris un poème avec le mot ‘chipolata’.",
-        "Balance une anecdote gênante (vraie ou fausse).",
-        "Offre un gif ridicule au membre de ton choix."
-    ]
-    gage = random.choice(gages_roulette)
+    gage = random.choice(gages)
     await ctx.send(f"🍾 La bouteille tourne sur le comptoir... et PAF ! Elle pointe **{cible.mention}** !\n💥 Gage : **{gage}**")
 
 @bot.command()
 async def beauf(ctx):
     await ctx.send("🧀 " + random.choice(punchlines))
+
+@bot.command()
+async def disquette(ctx):
+    phrase = random.choice(disquettes)
+    await ctx.send(f"💿 {phrase}")
+    await ctx.send("https://media.tenor.com/l9-yY1scnPIAAAAC/draguer-mdr.gif")
 
 # ========== GESTION DES RÔLES PAR RÉACTIONS ==========
 roles_rencontre = {
