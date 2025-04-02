@@ -63,6 +63,23 @@ intents.members = True
 intents.reactions = True
 
 bot = commands.Bot(command_prefix="!", intents=intents)
+
+@bot.command()
+async def help(ctx):
+    embed = discord.Embed(title="📜 Commandes de Hadès", color=discord.Color.gold())
+    embed.add_field(name="!ping", value="T’as pingé ? J’suis là cousin 🧢", inline=False)
+    embed.add_field(name="!tic", value="Tac tac dans les oreilles, ça réveille !", inline=False)
+    embed.add_field(name="!apero", value="Déclenche l’apéro sur le serveur 🍻", inline=False)
+    embed.add_field(name="!pastis", value="Un hommage au Pastis 51, bien beauf comme il faut 🥃", inline=False)
+    embed.add_field(name="!boulette", value="Balance le gif culte de la boulette 💥", inline=False)
+    embed.add_field(name="!pub", value="Petite phrase de pub vintage façon Hadès 📺", inline=False)
+    embed.add_field(name="!bouteille", value="Fais tourner la bouteille et impose un gage 🍾", inline=False)
+    embed.add_field(name="!beauf", value="Balance une phrase bien beauf 🧀", inline=False)
+    embed.add_field(name="!disquette", value="Sort une phrase de drague accompagnée d’un gif 💿", inline=False)
+    embed.add_field(name="!setup_roles (admin)", value="Ajoute les réactions pour gérer les rôles sur les bons messages ⚙️", inline=False)
+    embed.add_field(name="✨ Réponses automatiques", value="\- "santé" → "Mais pas des pieds 🍻"\n\- "verre" → "Mais pas plus haut que le bord 🥂"", inline=False)
+    await ctx.send(embed=embed)
+
 # ========== PHRASES DE BEAUF ==========
 punchlines = [
     "Si t'as pas de pastis, t'as raté ta vie.",
