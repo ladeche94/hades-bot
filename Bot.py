@@ -97,6 +97,20 @@ async def parler(ctx, channel: discord.TextChannel, *, message: str):
     except Exception as e:
         await ctx.send(f"❌ Y a eu un souci mon reuf : {e}")
 
+@bot.event
+async def on_message(message):
+    if message.author.bot:
+        return
+
+    content = message.content.lower()
+
+    if "santé" in content:
+        await message.channel.send("Mais pas des pieds 🍻")
+    elif "verre" in content:
+        await message.channel.send("Mais pas plus haut que le bord 🥂")
+
+    await bot.process_commands(message)
+
 @bot.command()
 async def apero(ctx):
     await ctx.send("🍻 Apéééééroooo mon reuf ! Qui ramène les chips ?")
