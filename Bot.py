@@ -93,10 +93,12 @@ async def help(ctx):
     embed.add_field(name="!disquette", value="Sort une phrase de drague accompagnée d’un gif 💿", inline=False)
     embed.add_field(name="!setup_roles (admin)", value="Ajoute les réactions pour gérer les rôles sur les bons messages ⚙️", inline=False)
     embed.add_field(
-    name="✨ Réponses automatiques",
-    value='- **santé** → "Mais pas des pieds 🍻"\n- **verre** → "Mais pas plus haut que le bord 🥂"',
-    inline=False
-)
+        name="✨ Réponses automatiques",
+        value="• Tape **santé** → Hadès répond *Mais pas des pieds 🍻*\n"
+              "• Tape **verre** → Hadès répond *Mais pas plus haut que le bord 🥂*",
+        inline=False
+    )
+    await ctx.send(embed=embed)
 
 @bot.command()
 async def ping(ctx):
