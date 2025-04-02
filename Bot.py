@@ -32,9 +32,7 @@ gages = [
 # Nouvelles disquettes (phrases de drague)
 disquettes = [
     "Es-tu affectée par le réchauffement climatique ? Car, t'es trop hot.",
-    "Salut ça te dirait un date un bowling ? Parce que au moins si on rentre pas ensemble j’aurais mis mes doigts dans un trou.",
     "Je te trouve un peu froide, attend que j'abbate le mur entre nous.",
-    "T'es vraiment trop une bombe, tu veux pas m'exploser comme le mur de Berlin ?",
     "Es-tu un prêt bancaire ? Parce que tu as capté mon intérêt !",
     "Tu crois à l’amour au premier regard ou je dois repasser une seconde fois ?",
     "J’aimerais être bigleux pour pouvoir te voir en double.",
