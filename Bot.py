@@ -90,6 +90,7 @@ async def help(ctx):
     embed.add_field(name="!bouteille", value="Fais tourner la bouteille et impose un gage 🍾", inline=False)
     embed.add_field(name="!beauf", value="Balance une phrase bien beauf 🧀", inline=False)
     embed.add_field(name="!disquette", value="Sort une phrase de drague accompagnée d’un gif 💿", inline=False)
+    embed.add_field(name="!lovecalc @pseudo1 @pseudo2", value="Calcule la compatibilité amoureuse entre deux personnes 💘", inline=False)
     embed.add_field(name="!setup_roles (admin)", value="Ajoute les réactions pour gérer les rôles sur les bons messages ⚙️", inline=False)
     embed.add_field(
         name="✨ Réponses automatiques",
