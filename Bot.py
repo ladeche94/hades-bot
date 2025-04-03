@@ -7,6 +7,9 @@ import yt_dlp as youtube_dl
 import random
 import asyncio
 
+queue = []
+current_voice_client = None
+
 gages = [
     "Chante le refrain de ta chanson honteuse préférée 🎤",
     "Avoue un crush Discord dans le chat 👀",
