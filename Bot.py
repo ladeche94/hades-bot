@@ -61,30 +61,6 @@ intents.reactions = True
 
 bot = commands.Bot(command_prefix="!", intents=intents, help_command=None)
 
-# Config yt_dlp
-ytdl_format_options = {
-    'format': 'bestaudio/best',
-    'noplaylist': True,
-    'default_search': 'ytsearch',
-    'source_address': '0.0.0.0'
-}
-ytdl = youtube_dl.YoutubeDL(ytdl_format_options)
-
-# Commande !play qui cherche un son sur SoundCloud
-@bot.command()
-async def play(ctx, *, search: str):
-    await ctx.send(f"🔍 Je cherche `{search}` sur SoundCloud...")
-
-    try:
-        data = await bot.loop.run_in_executor(None, lambda: ytdl.extract_info(f"scsearch:{search}", download=False))
-        entry = data['entries'][0]
-        title = entry.get('title', 'Inconnu')
-        url = entry.get('webpage_url', 'Lien non trouvé')
-
-        await ctx.send(f"🎧 J’ai trouvé ce son pour toi : **{title}**\n🔗 {url}")
-    except Exception as e:
-        await ctx.send(f"❌ Erreur pendant la recherche : {e}")
-
 # ========== PHRASES DE BEAUF ==========
 punchlines = [
     "Si t'as pas de pastis, t'as raté ta vie.",
