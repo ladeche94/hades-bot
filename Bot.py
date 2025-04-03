@@ -89,6 +89,7 @@ async def help(ctx):
     embed.add_field(name="!disquette", value="Sort une phrase de drague accompagnée d’un gif 💿", inline=False)
     embed.add_field(name="!pfc [pierre|feuille|ciseaux]", value="Pierre-Feuille-Ciseaux contre Hadès ✊📄✂️", inline=False)
     embed.add_field(name="!devine", value="Hadès pense à un nombre entre 1 et 100. À toi de deviner ! 🔢", inline=False)
+    embed.add_field(name="!eightball [question]", value="Pose une question à la boule magique 🎱", inline=False)
     embed.add_field(name="!lovecalc @pseudo1 @pseudo2", value="Calcule la compatibilité amoureuse entre deux personnes 💘", inline=False)
     embed.add_field(name="!setup_roles (admin)", value="Ajoute les réactions pour gérer les rôles sur les bons messages ⚙️", inline=False)
     embed.add_field(
@@ -102,6 +103,20 @@ async def help(ctx):
 @bot.command()
 async def ping(ctx):
     await ctx.send("T’as pingé ? J’suis là cousin 🧢")
+
+@bot.command()
+async def eightball(ctx, *, question: str):
+    reponses = [
+        "Sans aucun doute, cousin.",
+        "Faut voir avec le pastis d'abord.",
+        "Hmm... J’dirais que oui, mais j’suis pas devin hein.",
+        "T'as p'têt plus de chances au loto.",
+        "Pose ta question après l’apéro.",
+        "Grave possible, comme un kebab à 4h du mat.",
+        "C’est chaud mon reuf, mais qui ne tente rien...",
+        "Oublie, même les astres rigolent."
+    ]
+    await ctx.send(f"🎱 Question : {question}\nRéponse : {random.choice(reponses)}")
 
 @bot.command()
 async def tic(ctx):
