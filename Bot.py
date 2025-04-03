@@ -103,7 +103,8 @@ async def play(ctx, *, search: str):
     elif current_voice_client.channel != voice_channel:
         await current_voice_client.move_to(voice_channel)
 
-    await ctx.send(f"🔍 Je cherche "{search}" sur SoundCloud...")
+ await ctx.send(f"🔍 Je cherche `{search}` sur SoundCloud...")
+
     try:
         data = await bot.loop.run_in_executor(None, lambda: ytdl.extract_info(f"scsearch:{search}", download=False))
         entry = data['entries'][0]
