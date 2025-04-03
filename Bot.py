@@ -1,4 +1,3 @@
-# main.py
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -6,9 +5,6 @@ import os
 import yt_dlp as youtube_dl
 import random
 import asyncio
-
-queue = []
-current_voice_client = None
 
 gages = [
     "Chante le refrain de ta chanson honteuse préférée 🎤",
@@ -65,7 +61,9 @@ intents.reactions = True
 
 bot = commands.Bot(command_prefix="!", intents=intents, help_command=None)
 
-# ========== MUSIQUE ==========
+# Système musical simplifié avec SoundCloud uniquement
+queue = []
+current_voice_client = None
 
 ytdl_format_options = {
     'format': 'bestaudio/best',
@@ -103,8 +101,7 @@ async def play(ctx, *, search: str):
     elif current_voice_client.channel != voice_channel:
         await current_voice_client.move_to(voice_channel)
 
- await ctx.send(f"🔍 Je cherche `{search}` sur SoundCloud...")
-
+    await ctx.send(f"🔍 Je cherche `{search}` sur SoundCloud...")
     try:
         data = await bot.loop.run_in_executor(None, lambda: ytdl.extract_info(f"scsearch:{search}", download=False))
         entry = data['entries'][0]
@@ -119,14 +116,6 @@ async def play(ctx, *, search: str):
     except Exception as e:
         await ctx.send(f"❌ Erreur SoundCloud : {e}")
 
-@bot.command()
-async def skip(ctx):
-    global current_voice_client
-    if current_voice_client and current_voice_client.is_playing():
-        current_voice_client.stop()
-        await ctx.send("⏭️ Morceau zappé, on passe au suivant !")
-    else:
-        await ctx.send("🛑 Y'a rien qui tourne frérot.")
 
 # ========== PHRASES DE BEAUF ==========
 punchlines = [
@@ -149,7 +138,7 @@ async def help(ctx):
     embed.add_field(name="!ping", value="T’as pingé ? J’suis là cousin 🧢", inline=False)
     embed.add_field(name="!tic", value="Tac tac dans les oreilles, ça réveille !", inline=False)
     embed.add_field(name="!apero", value="Déclenche l’apéro sur le serveur 🍻", inline=False)
-    embed.add_field(name="!boulette", value="Balance le gif culte de la boulette 💥", inline=False)
+    embed.add_field(name="!boulette", value="Balance le gif culte de la boulette 💥", inline=False)import discord
     embed.add_field(name="!pub", value="Petite phrase de pub vintage façon Hadès 📺", inline=False)
     embed.add_field(name="!bouteille", value="Fais tourner la bouteille et impose un gage 🍾", inline=False)
     embed.add_field(name="!beauf", value="Balance une phrase bien beauf 🧀", inline=False)
