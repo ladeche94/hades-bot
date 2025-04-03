@@ -133,6 +133,25 @@ async def apero(ctx):
     await ctx.send("🍻 Apéééééroooo mon reuf ! Qui ramène les chips ?")
 
 @bot.command()
+async def pfc(ctx, choix: str):
+    options = ["pierre", "feuille", "ciseaux"]
+    if choix.lower() not in options:
+        return await ctx.send("❌ Choisis entre `pierre`, `feuille` ou `ciseaux`, champion !")
+
+    bot_choix = random.choice(options)
+    await ctx.send(f"🧠 Hadès a choisi : **{bot_choix}**")
+
+    if choix == bot_choix:
+        await ctx.send("🤝 Égalité ! T'es pas si nul.")
+    elif (choix == "pierre" and bot_choix == "ciseaux") or \
+         (choix == "feuille" and bot_choix == "pierre") or \
+         (choix == "ciseaux" and bot_choix == "feuille"):
+        await ctx.send("🔥 T'as gagné ! Une petite bière pour fêter ça ?")
+    else:
+        await ctx.send("💀 Boum ! Hadès gagne, comme d'hab.")
+
+
+@bot.command()
 async def boulette(ctx):
     await ctx.send("💥 Oh là là... LA BOULETTE !")
     await ctx.send("https://media.tenor.com/BmFLBYjXRMwAAAAC/oh-la-boulette-as-de-la-jungle.gif")
@@ -146,6 +165,31 @@ async def pub(ctx):
         "Une bière. Un ami. Le silence. Le respect. 🍺"
     ]
     await ctx.send(random.choice(phrases_pub))
+
+@bot.command()
+async def devine(ctx):
+    nombre = random.randint(1, 100)
+    await ctx.send("🤔 J'ai pensé à un nombre entre 1 et 100. Essaye de deviner !")
+
+    def check(m):
+        return m.author == ctx.author and m.channel == ctx.channel and m.content.isdigit()
+
+    try:
+        for _ in range(5):  # 5 tentatives max
+            guess = await bot.wait_for("message", check=check, timeout=30.0)
+            guess = int(guess.content)
+
+            if guess == nombre:
+                await ctx.send("🎉 Gagné ! Tu lis dans mes pensées ou quoi ?")
+                return
+            elif guess < nombre:
+                await ctx.send("🔼 Trop petit !")
+            else:
+                await ctx.send("🔽 Trop grand !")
+
+        await ctx.send(f"😏 C'était **{nombre}**. Reviens t'entraîner.")
+    except asyncio.TimeoutError:
+        await ctx.send(f"⏰ Trop long ! Le nombre était **{nombre}**.")
 
 @bot.command()
 async def lovecalc(ctx, user1: discord.Member, user2: discord.Member):
