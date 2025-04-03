@@ -61,61 +61,29 @@ intents.reactions = True
 
 bot = commands.Bot(command_prefix="!", intents=intents, help_command=None)
 
-# Système musical simplifié avec SoundCloud uniquement
-queue = []
-current_voice_client = None
-
+# Config yt_dlp
 ytdl_format_options = {
     'format': 'bestaudio/best',
     'noplaylist': True,
     'default_search': 'ytsearch',
     'source_address': '0.0.0.0'
 }
-ffmpeg_options = {
-    'options': '-vn'
-}
 ytdl = youtube_dl.YoutubeDL(ytdl_format_options)
 
-async def play_next(ctx):
-    global queue, current_voice_client
-    if queue:
-        url, title = queue.pop(0)
-        data = await bot.loop.run_in_executor(None, lambda: ytdl.extract_info(url, download=True))
-        filename = ytdl.prepare_filename(data)
-        source = discord.FFmpegPCMAudio(filename)
-        current_voice_client.play(source, after=lambda e: bot.loop.create_task(play_next(ctx)))
-        await ctx.send(f"🎶 ENVOYÉÉÉÉ : **{title}** 🔊🔥")
-    else:
-        await current_voice_client.disconnect()
-        current_voice_client = None
-
+# Commande !play qui cherche un son sur SoundCloud
 @bot.command()
 async def play(ctx, *, search: str):
-    global current_voice_client
-    if ctx.author.voice is None:
-        return await ctx.send("❌ Monte dans le vocal d'abord frérot 😤")
-
-    voice_channel = ctx.author.voice.channel
-    if not current_voice_client:
-        current_voice_client = await voice_channel.connect()
-    elif current_voice_client.channel != voice_channel:
-        await current_voice_client.move_to(voice_channel)
-
     await ctx.send(f"🔍 Je cherche `{search}` sur SoundCloud...")
+
     try:
         data = await bot.loop.run_in_executor(None, lambda: ytdl.extract_info(f"scsearch:{search}", download=False))
         entry = data['entries'][0]
-        url = entry['webpage_url']
         title = entry.get('title', 'Inconnu')
-        queue.append((url, title))
+        url = entry.get('webpage_url', 'Lien non trouvé')
 
-        if not current_voice_client.is_playing():
-            await play_next(ctx)
-        else:
-            await ctx.send(f"📦 Ajouté à la file : **{title}**")
+        await ctx.send(f"🎧 J’ai trouvé ce son pour toi : **{title}**\n🔗 {url}")
     except Exception as e:
-        await ctx.send(f"❌ Erreur SoundCloud : {e}")
-
+        await ctx.send(f"❌ Erreur pendant la recherche : {e}")
 
 # ========== PHRASES DE BEAUF ==========
 punchlines = [
