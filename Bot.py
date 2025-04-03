@@ -138,7 +138,7 @@ async def help(ctx):
     embed.add_field(name="!ping", value="T’as pingé ? J’suis là cousin 🧢", inline=False)
     embed.add_field(name="!tic", value="Tac tac dans les oreilles, ça réveille !", inline=False)
     embed.add_field(name="!apero", value="Déclenche l’apéro sur le serveur 🍻", inline=False)
-    embed.add_field(name="!boulette", value="Balance le gif culte de la boulette 💥", inline=False)import discord
+    embed.add_field(name="!boulette", value="Balance le gif culte de la boulette 💥", inline=False)
     embed.add_field(name="!pub", value="Petite phrase de pub vintage façon Hadès 📺", inline=False)
     embed.add_field(name="!bouteille", value="Fais tourner la bouteille et impose un gage 🍾", inline=False)
     embed.add_field(name="!beauf", value="Balance une phrase bien beauf 🧀", inline=False)
