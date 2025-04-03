@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 import os
 import yt_dlp as youtube_dl
 import random
+import asyncio
 
 gages = [
     "Chante le refrain de ta chanson honteuse préférée 🎤",
@@ -62,66 +63,71 @@ intents.reactions = True
 bot = commands.Bot(command_prefix="!", intents=intents, help_command=None)
 
 # ========== MUSIQUE ==========
+
 ytdl_format_options = {
-    'format': 'bestaudio/best',
-    'outtmpl': 'downloads/%(title)s.%(ext)s',
-    'noplaylist': True
+    'format': 'bestaudio',
+    'quiet': True
 }
+
 ffmpeg_options = {
     'options': '-vn'
 }
+
 ytdl = youtube_dl.YoutubeDL(ytdl_format_options)
+
+class YTDLSource(discord.PCMVolumeTransformer):
+    def __init__(self, source, *, data, volume=0.5):
+        super().__init__(source, volume)
+        self.data = data
+        self.title = data.get('title')
+
+    @classmethod
+    async def from_url(cls, url, *, loop=None, stream=True):
+        loop = loop or asyncio.get_event_loop()
+        data = await loop.run_in_executor(None, lambda: ytdl.extract_info(url, download=not stream))
+
+        if 'entries' in data:
+            data = data['entries'][0]
+
+        filename = data['url'] if stream else ytdl.prepare_filename(data)
+        return cls(discord.FFmpegPCMAudio(filename, **ffmpeg_options), data=data)
 
 @bot.command()
 async def play(ctx, url: str):
     if ctx.author.voice is None:
-        return await ctx.send("❌ Monte dans le vocal d'abord frérot 😤")
+        return await ctx.send("❌ T'es même pas en vocal frérot 😤")
 
     channel = ctx.author.voice.channel
-    voice_client = ctx.voice_client
 
-    if voice_client is None:
+    if ctx.voice_client is None:
+        await channel.connect()
+
+    async with ctx.typing():
         try:
-            voice_client = await channel.connect()
-            await ctx.send("🎤 J’fais mon entrée dans le vocal, comme une légende.")
+            player = await YTDLSource.from_url(url, loop=bot.loop, stream=True)
+            ctx.voice_client.play(player, after=lambda e: print(f'Erreur en lecture: {e}') if e else None)
+            await ctx.send(f"🎶 ENVOYÉÉÉÉ : **{player.title}** 🔊🔥")
         except Exception as e:
-            await ctx.send(f"❌ J’ai pas réussi à rentrer : {e}")
-            return
-
-    try:
-        data = await bot.loop.run_in_executor(None, lambda: ytdl.extract_info(url, download=True))
-        if 'entries' in data:
-            data = data['entries'][0]
-
-        filename = ytdl.prepare_filename(data)
-        title = data.get('title', 'Musique inconnue')
-
-        if filename:
-            source = discord.FFmpegPCMAudio(filename)
-            voice_client.stop()
-            voice_client.play(source)
-            await ctx.send(f"🎶 ENVOYÉÉÉÉ : **{title}** 🔊🔥")
-        else:
-            await ctx.send("❌ Fichier audio perdu dans les méandres du web.")
-
-    except Exception as e:
-        await ctx.send(f"❌ J’ai pété un câble en lançant la musique : {e}")
-
-@bot.command()
-async def stop(ctx):
-    voice_client = ctx.voice_client
-    if voice_client:
-        await voice_client.disconnect()
-        await ctx.send("🛑 Stop ! L’ambiance est morte. Qui a fait ça ? 😩")
+            await ctx.send(f"❌ J’ai pété un câble en lançant la musique : {e}")
 
 @bot.command()
 async def skip(ctx):
-    voice_client = ctx.voice_client
-    if voice_client and voice_client.is_playing():
-        voice_client.stop()
-        await ctx.send("⏭️ Musique skip ! Envoie la suite DJ 🔊")
+    vc = ctx.voice_client
+    if vc and vc.is_playing():
+        vc.stop()
+        await ctx.send("⏭️ Skip ! Envoie la suite DJ !")
     else:
-        await ctx.send("❌ Y a rien à skip mon reuf.")
+        await ctx.send("❌ Y a rien à skipper frérot !")
+
+@bot.command()
+async def stop(ctx):
+    vc = ctx.voice_client
+    if vc and vc.is_connected():
+        await vc.disconnect()
+        await ctx.send("🛑 Stop ! L’ambiance est morte. Qui a fait ça ? 😩")
+    else:
+        await ctx.send("❌ J’suis même pas dans le vocal gros.")
+
 
 # ========== PHRASES DE BEAUF ==========
 punchlines = [
