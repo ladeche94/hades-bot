@@ -65,69 +65,64 @@ bot = commands.Bot(command_prefix="!", intents=intents, help_command=None)
 # ========== MUSIQUE ==========
 
 ytdl_format_options = {
-    'format': 'bestaudio',
-    'quiet': True
+    'format': 'bestaudio/best',
+    'noplaylist': True,
+    'default_search': 'ytsearch',
+    'source_address': '0.0.0.0'
 }
-
 ffmpeg_options = {
     'options': '-vn'
 }
-
 ytdl = youtube_dl.YoutubeDL(ytdl_format_options)
 
-class YTDLSource(discord.PCMVolumeTransformer):
-    def __init__(self, source, *, data, volume=0.5):
-        super().__init__(source, volume)
-        self.data = data
-        self.title = data.get('title')
-
-    @classmethod
-    async def from_url(cls, url, *, loop=None, stream=True):
-        loop = loop or asyncio.get_event_loop()
-        data = await loop.run_in_executor(None, lambda: ytdl.extract_info(url, download=not stream))
-
-        if 'entries' in data:
-            data = data['entries'][0]
-
-        filename = data['url'] if stream else ytdl.prepare_filename(data)
-        return cls(discord.FFmpegPCMAudio(filename, **ffmpeg_options), data=data)
+async def play_next(ctx):
+    global queue, current_voice_client
+    if queue:
+        url, title = queue.pop(0)
+        data = await bot.loop.run_in_executor(None, lambda: ytdl.extract_info(url, download=True))
+        filename = ytdl.prepare_filename(data)
+        source = discord.FFmpegPCMAudio(filename)
+        current_voice_client.play(source, after=lambda e: bot.loop.create_task(play_next(ctx)))
+        await ctx.send(f"🎶 ENVOYÉÉÉÉ : **{title}** 🔊🔥")
+    else:
+        await current_voice_client.disconnect()
+        current_voice_client = None
 
 @bot.command()
-async def play(ctx, url: str):
+async def play(ctx, *, search: str):
+    global current_voice_client
     if ctx.author.voice is None:
-        return await ctx.send("❌ T'es même pas en vocal frérot 😤")
+        return await ctx.send("❌ Monte dans le vocal d'abord frérot 😤")
 
-    channel = ctx.author.voice.channel
+    voice_channel = ctx.author.voice.channel
+    if not current_voice_client:
+        current_voice_client = await voice_channel.connect()
+    elif current_voice_client.channel != voice_channel:
+        await current_voice_client.move_to(voice_channel)
 
-    if ctx.voice_client is None:
-        await channel.connect()
+    await ctx.send(f"🔍 Je cherche "{search}" sur SoundCloud...")
+    try:
+        data = await bot.loop.run_in_executor(None, lambda: ytdl.extract_info(f"scsearch:{search}", download=False))
+        entry = data['entries'][0]
+        url = entry['webpage_url']
+        title = entry.get('title', 'Inconnu')
+        queue.append((url, title))
 
-    async with ctx.typing():
-        try:
-            player = await YTDLSource.from_url(url, loop=bot.loop, stream=True)
-            ctx.voice_client.play(player, after=lambda e: print(f'Erreur en lecture: {e}') if e else None)
-            await ctx.send(f"🎶 ENVOYÉÉÉÉ : **{player.title}** 🔊🔥")
-        except Exception as e:
-            await ctx.send(f"❌ J’ai pété un câble en lançant la musique : {e}")
+        if not current_voice_client.is_playing():
+            await play_next(ctx)
+        else:
+            await ctx.send(f"📦 Ajouté à la file : **{title}**")
+    except Exception as e:
+        await ctx.send(f"❌ Erreur SoundCloud : {e}")
 
 @bot.command()
 async def skip(ctx):
-    vc = ctx.voice_client
-    if vc and vc.is_playing():
-        vc.stop()
-        await ctx.send("⏭️ Skip ! Envoie la suite DJ !")
+    global current_voice_client
+    if current_voice_client and current_voice_client.is_playing():
+        current_voice_client.stop()
+        await ctx.send("⏭️ Morceau zappé, on passe au suivant !")
     else:
-        await ctx.send("❌ Y a rien à skipper frérot !")
-
-@bot.command()
-async def stop(ctx):
-    vc = ctx.voice_client
-    if vc and vc.is_connected():
-        await vc.disconnect()
-        await ctx.send("🛑 Stop ! L’ambiance est morte. Qui a fait ça ? 😩")
-    else:
-        await ctx.send("❌ J’suis même pas dans le vocal gros.")
-
+        await ctx.send("🛑 Y'a rien qui tourne frérot.")
 
 # ========== PHRASES DE BEAUF ==========
 punchlines = [
