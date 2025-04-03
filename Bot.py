@@ -29,7 +29,6 @@ gages = [
     "Souvenir partagé : Évoquez un souvenir ou une expérience que vous aimeriez partager avec la personne à l’avenir."
 ]
 
-# Nouvelles disquettes (phrases de drague)
 disquettes = [
     "Es-tu affectée par le réchauffement climatique ? Car, t'es trop hot.",
     "Je te trouve un peu froide, attend que j'abbate le mur entre nous.",
@@ -52,17 +51,77 @@ disquettes = [
     "J'ai besoin d'un bouche à bouche car je viens de me noyer dans votre regard."
 ]
 
-# Charger le token depuis les variables d'environnement
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
 
-# Permissions
 intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
 intents.reactions = True
 
 bot = commands.Bot(command_prefix="!", intents=intents, help_command=None)
+
+# ========== MUSIQUE ==========
+ytdl_format_options = {
+    'format': 'bestaudio/best',
+    'outtmpl': 'downloads/%(title)s.%(ext)s',
+    'noplaylist': True
+}
+ffmpeg_options = {
+    'options': '-vn'
+}
+ytdl = youtube_dl.YoutubeDL(ytdl_format_options)
+
+@bot.command()
+async def play(ctx, url: str):
+    if ctx.author.voice is None:
+        return await ctx.send("❌ Monte dans le vocal d'abord frérot 😤")
+
+    channel = ctx.author.voice.channel
+    voice_client = ctx.voice_client
+
+    if voice_client is None:
+        try:
+            voice_client = await channel.connect()
+            await ctx.send("🎤 J’fais mon entrée dans le vocal, comme une légende.")
+        except Exception as e:
+            await ctx.send(f"❌ J’ai pas réussi à rentrer : {e}")
+            return
+
+    try:
+        data = await bot.loop.run_in_executor(None, lambda: ytdl.extract_info(url, download=True))
+        if 'entries' in data:
+            data = data['entries'][0]
+
+        filename = ytdl.prepare_filename(data)
+        title = data.get('title', 'Musique inconnue')
+
+        if filename:
+            source = discord.FFmpegPCMAudio(filename)
+            voice_client.stop()
+            voice_client.play(source)
+            await ctx.send(f"🎶 ENVOYÉÉÉÉ : **{title}** 🔊🔥")
+        else:
+            await ctx.send("❌ Fichier audio perdu dans les méandres du web.")
+
+    except Exception as e:
+        await ctx.send(f"❌ J’ai pété un câble en lançant la musique : {e}")
+
+@bot.command()
+async def stop(ctx):
+    voice_client = ctx.voice_client
+    if voice_client:
+        await voice_client.disconnect()
+        await ctx.send("🛑 Stop ! L’ambiance est morte. Qui a fait ça ? 😩")
+
+@bot.command()
+async def skip(ctx):
+    voice_client = ctx.voice_client
+    if voice_client and voice_client.is_playing():
+        voice_client.stop()
+        await ctx.send("⏭️ Musique skip ! Envoie la suite DJ 🔊")
+    else:
+        await ctx.send("❌ Y a rien à skip mon reuf.")
 
 # ========== PHRASES DE BEAUF ==========
 punchlines = [
