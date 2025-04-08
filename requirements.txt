@@ -2,4 +2,3 @@ discord.py
 python-dotenv
 yt-dlp
 PyNaCl
-git+https://github.com/FailX1/akinator.py.git
