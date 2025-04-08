@@ -6,6 +6,7 @@ import yt_dlp as youtube_dl
 import random
 import asyncio
 import akinator
+import asyncio
 
 gages = [
     "Chante le refrain de ta chanson honteuse préférée 🎤",
@@ -105,8 +106,13 @@ async def help(ctx):
 async def start_akinator(ctx):
     aki = akinator.Akinator()
     await ctx.send("🧞 Je suis Akinator ! Pense à un personnage, réel ou fictif, et réponds par : `oui`, `non`, `je ne sais pas`, `probablement`, ou `probablement pas`.\n\nPour arrêter : tape `stop`.")
-    
-    q = await aki.start_game()
+
+    try:
+        q = await aki.start_game()
+    except Exception as e:
+        await ctx.send(f"❌ Impossible de lancer Akinator : {e}")
+        return
+
     await ctx.send(q)
 
     def check(m):
@@ -128,12 +134,14 @@ async def start_akinator(ctx):
         except akinator.CantGoBackAnyFurther:
             await ctx.send("❌ Impossible de revenir en arrière !")
             continue
+        except Exception as e:
+            await ctx.send(f"❌ Erreur : {e}")
+            continue
 
         await ctx.send(q)
 
     await aki.win()
     await ctx.send(f"🎯 Je pense à **{aki.first_guess['name']}** !\n_{aki.first_guess['description']}_\n{aki.first_guess['absolute_picture_path']}")
-
 
 
 @bot.command()
