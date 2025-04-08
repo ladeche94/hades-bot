@@ -168,10 +168,10 @@ async def pfc(ctx, choix: str):
         await ctx.send("💀 Boum ! Hadès gagne, comme d'hab.")
 
 
-@bot.command()
+@bot.command(name='boulette')
 async def boulette(ctx):
-    await ctx.send("💥 Oh là là... LA BOULETTE !")
-    await ctx.send("https://media.tenor.com/BmFLBYjXRMwAAAAC/oh-la-boulette-as-de-la-jungle.gif")
+    await ctx.send('Oh la boulette !')
+    await ctx.send('https://tenor.com/view/oh-la-boulette-as-de-la-jungle-roger-roger-le-jardinier-gif-11065058356198134565')
 
 @bot.command()
 async def pub(ctx):
