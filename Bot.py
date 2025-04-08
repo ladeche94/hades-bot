@@ -5,6 +5,7 @@ import os
 import yt_dlp as youtube_dl
 import random
 import asyncio
+import akinator
 
 gages = [
     "Chante le refrain de ta chanson honteuse préférée 🎤",
@@ -99,6 +100,41 @@ async def help(ctx):
         inline=False
     )
     await ctx.send(embed=embed)
+
+@bot.command(name='akinator')
+async def start_akinator(ctx):
+    aki = akinator.Akinator()
+    await ctx.send("🧞 Je suis Akinator ! Pense à un personnage, réel ou fictif, et réponds par : `oui`, `non`, `je ne sais pas`, `probablement`, ou `probablement pas`.\n\nPour arrêter : tape `stop`.")
+    
+    q = await aki.start_game()
+    await ctx.send(q)
+
+    def check(m):
+        return m.author == ctx.author and m.channel == ctx.channel
+
+    while aki.progression <= 80:
+        try:
+            msg = await bot.wait_for("message", check=check, timeout=60.0)
+        except asyncio.TimeoutError:
+            await ctx.send("⏰ Temps écoulé ! On rejouera plus tard.")
+            return
+
+        if msg.content.lower() == "stop":
+            await ctx.send("🛑 Akinator arrêté. À la prochaine !")
+            return
+
+        try:
+            q = await aki.answer(msg.content.lower())
+        except akinator.CantGoBackAnyFurther:
+            await ctx.send("❌ Impossible de revenir en arrière !")
+            continue
+
+        await ctx.send(q)
+
+    await aki.win()
+    await ctx.send(f"🎯 Je pense à **{aki.first_guess['name']}** !\n_{aki.first_guess['description']}_\n{aki.first_guess['absolute_picture_path']}")
+
+
 
 @bot.command()
 async def ping(ctx):
