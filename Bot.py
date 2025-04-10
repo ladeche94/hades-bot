@@ -7,6 +7,58 @@ import random
 import asyncio
 
 
+livres_a_deviner = [
+    # — NEW ROMANCE —
+    {
+        "indice": "Un bad boy tatoué, une étudiante brisée. Leur attirance est une bombe à retardement.",
+        "reponse": "After"
+    },
+    {
+        "indice": "Il est tout ce qu’elle déteste. Elle est tout ce qu’il désire. Et ils sont coincés ensemble à l’université.",
+        "reponse": "The Deal"
+    },
+
+    # — DARK ROMANCE —
+    {
+        "indice": "Elle est kidnappée par un mafieux. Il jure de la posséder, même si elle le hait.",
+        "reponse": "Captive in the Dark"
+    },
+    {
+        "indice": "Un pacte sanglant, une obsession toxique. Elle ne pourra plus jamais fuir.",
+        "reponse": "Twisted Love"
+    },
+
+    # — ROMANTASY —
+    {
+        "indice": "Elle est promise à un roi immortel. Mais son cœur bat pour un autre…",
+        "reponse": "La Cité de Lait et de Feu"
+    },
+    {
+        "indice": "Une tueuse d'élite est envoyée dans un royaume magique. Entre vengeance et passion, tout vacille.",
+        "reponse": "Throne of Glass"
+    },
+
+    # — FANTASY —
+    {
+        "indice": "Un jeune orphelin découvre qu’il est le descendant d’un ancien peuple ailé.",
+        "reponse": "Eragon"
+    },
+    {
+        "indice": "Un anneau unique, un fardeau immense, et une quête à travers la Terre du Milieu.",
+        "reponse": "Le Seigneur des Anneaux"
+    },
+
+    # — THRILLER / POLICIER —
+    {
+        "indice": "Un meurtre d’enfant dans une petite ville. Le coupable est peut-être celui qu’on aime le plus.",
+        "reponse": "La vérité sur l'affaire Harry Quebert"
+    },
+    {
+        "indice": "Une détective enquête sur un tueur en série qui signe ses meurtres comme une œuvre d’art.",
+        "reponse": "Le Chuchoteur"
+    }
+]
+
 gages = [
     "Chante le refrain de ta chanson honteuse préférée 🎤",
     "Avoue un crush Discord dans le chat 👀",
