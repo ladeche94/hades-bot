@@ -175,7 +175,14 @@ async def classement(ctx):
 
     await ctx.send(message)
 
-
+@bot.command()
+async def dernier_livre(ctx):
+    if livres_a_deviner:
+        dernier = livres_a_deviner[-1]
+        await ctx.send(f"🕵️‍♂️ **Dernier livre ajouté :**\nIndice : *{dernier['indice']}*\nRéponse : ||{dernier['reponse']}||")
+    else:
+        await ctx.send("Aucun livre enregistré.")
+        
 @bot.command()
 async def eightball(ctx, *, question: str):
     reponses = [
