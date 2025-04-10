@@ -241,22 +241,21 @@ async def on_message(message):
                     "reponse": etat["reponse"]
                 })
                 sauvegarder_livres()
+
+                # Envoie une alerte dans le salon d'alertes
+                for guild in bot.guilds:
+                    salon = guild.get_channel(salon_alertes_id)
+                    if salon:
+                        await salon.send(
+                            f"📚 **Nouveau livre proposé par {message.author.mention}** :\n"
+                            f"🔍 Indice : *{etat['indice']}*\n"
+                            f"✅ Réponse : **{etat['reponse']}**"
+                        )
+
                 del utilisateurs_ajout[uid]
                 await message.channel.send("✅ Livre ajouté avec succès ! Merci pour ta contribution 💖")
 
-# Envoie une alerte dans le salon du serveur
-guild = bot.guilds[0]  # récupère le premier serveur (adapté si tu n'en as qu’un)
-salon = guild.get_channel(salon_alertes_id)
-if salon:
-    await salon.send(
-        f"📚 **Nouveau livre proposé par {message.author.name}** :\n"
-        f"🔍 Indice : *{etat['indice']}*\n"
-        f"✅ Réponse : **{etat['reponse']}**"
-    )
-
     await bot.process_commands(message)
-
-
 
 @bot.command()
 async def ajoute_livre(ctx):
