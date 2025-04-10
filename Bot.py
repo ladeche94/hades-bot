@@ -5,7 +5,11 @@ import os
 import yt_dlp as youtube_dl
 import random
 import asyncio
+import random
+import json
+import os
 
+scores = {}
 
 livres_a_deviner = [
     # — NEW ROMANCE —
@@ -114,6 +118,16 @@ intents.reactions = True
 
 bot = commands.Bot(command_prefix="!", intents=intents, help_command=None)
 
+if os.path.exists("scores.json"):
+    with open("scores.json", "r", encoding="utf-8") as f:
+        scores = json.load(f)
+else:
+    scores = {}
+
+def sauvegarder_scores():
+    with open("scores.json", "w", encoding="utf-8") as f:
+        json.dump(scores, f, ensure_ascii=False, indent=4)
+        
 # ========== PHRASES DE BEAUF ==========
 punchlines = [
     "Si t'as pas de pastis, t'as raté ta vie.",
@@ -142,6 +156,10 @@ async def help(ctx):
     embed.add_field(name="!disquette", value="Sort une phrase de drague accompagnée d’un gif 💿", inline=False)
     embed.add_field(name="!pfc [pierre|feuille|ciseaux]", value="Pierre-Feuille-Ciseaux contre Hadès ✊📄✂️", inline=False)
     embed.add_field(name="!devine", value="Hadès pense à un nombre entre 1 et 100. À toi de deviner ! 🔢", inline=False)
+    embed.add_field(name="!livre", value="Devine un livre à partir d’un indice 📖", inline=False)
+    embed.add_field(name="!propose [réponse]", value="Fais ta proposition pour le jeu du livre 🕵️", inline=False)
+    embed.add_field(name="!score", value="Affiche ton score dans le jeu 'Devine le livre' 🧠", inline=False)
+    embed.add_field(name="!classement", value="Montre le classement des meilleurs joueurs 📊", inline=False)
     embed.add_field(name="!eightball [question]", value="Pose une question à la boule magique 🎱", inline=False)
     embed.add_field(name="!lovecalc @pseudo1 @pseudo2", value="Calcule la compatibilité amoureuse entre deux personnes 💘", inline=False)
     embed.add_field(name="!setup_roles (admin)", value="Ajoute les réactions pour gérer les rôles sur les bons messages ⚙️", inline=False)
@@ -153,12 +171,49 @@ async def help(ctx):
     )
     await ctx.send(embed=embed)
 
-
-
+@bot.command()
+async def livre(ctx):
+    livre = random.choice(livres_a_deviner)
+    ctx.bot.devine_livre_en_cours = livre  # On garde l'énigme active
+    await ctx.send(f"📖 **Devine le livre :**\n*{livre['indice']}*\n\nTape `!propose [ta réponse]` pour jouer !")
 
 @bot.command()
-async def ping(ctx):
-    await ctx.send("T’as pingé ? J’suis là cousin 🧢")
+async def propose(ctx, *, proposition):
+    livre = getattr(ctx.bot, "devine_livre_en_cours", None)
+    if not livre:
+        await ctx.send("📚 Il n'y a pas de livre à deviner pour l'instant. Lance le jeu avec `!livre`.")
+        return
+
+    if proposition.lower().strip() == livre["reponse"].lower():
+        sauvegarder_scores()
+        user_id = str(ctx.author.id)
+        scores[user_id] = scores.get(user_id, 0) + 1
+        await ctx.send(f"🎉 Bravo {ctx.author.mention} ! C’était **{livre['reponse']}**. Tu gagnes 1 point ! 🏆\nTu as maintenant {scores[user_id]} point(s) !")
+        ctx.bot.devine_livre_en_cours = None
+    else:
+        await ctx.send(f"❌ Mauvaise réponse, {ctx.author.mention}. Essaie encore !")
+
+@bot.command()
+async def score(ctx):
+    user_id = str(ctx.author.id)
+    score = scores.get(user_id, 0)
+    await ctx.send(f"📊 {ctx.author.mention}, tu as **{score} point(s)**.")
+
+@bot.command()
+async def classement(ctx):
+    if not scores:
+        await ctx.send("🪶 Aucun score enregistré pour le moment.")
+        return
+
+    classement = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+    message = "🏆 **Top 5 des détectives littéraires** 📚\n\n"
+
+    for i, (user_id, score) in enumerate(classement[:5], start=1):
+        user = await bot.fetch_user(int(user_id))
+        message += f"{i}. {user.name} — {score} point(s)\n"
+
+    await ctx.send(message)
+
 
 @bot.command()
 async def eightball(ctx, *, question: str):
