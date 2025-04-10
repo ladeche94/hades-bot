@@ -120,6 +120,7 @@ async def help(ctx):
     embed.add_field(name="!propose [réponse]", value="Fais ta proposition pour le jeu du livre 🕵️", inline=False)
     embed.add_field(name="!score", value="Affiche ton score dans le jeu 'Devine le livre' 🧠", inline=False)
     embed.add_field(name="!classement", value="Montre le classement des meilleurs joueurs 📊", inline=False)
+    embed.add_field(name="!ajoute_livre (en MP)", value="Propose un nouveau livre à deviner 💌", inline=False)
     embed.add_field(name="!eightball [question]", value="Pose une question à la boule magique 🎱", inline=False)
     embed.add_field(name="!lovecalc @pseudo1 @pseudo2", value="Calcule la compatibilité amoureuse entre deux personnes 💘", inline=False)
     embed.add_field(name="!setup_roles (admin)", value="Ajoute les réactions pour gérer les rôles sur les bons messages ⚙️", inline=False)
