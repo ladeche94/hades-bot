@@ -9,59 +9,19 @@ import random
 import json
 import os
 
+utilisateurs_ajout = {}
+
+if os.path.exists("livres.json"):
+    with open("livres.json", "r", encoding="utf-8") as f:
+        livres_a_deviner = json.load(f)
+else:
+    livres_a_deviner = []
+
+def sauvegarder_livres():
+    with open("livres.json", "w", encoding="utf-8") as f:
+        json.dump(livres_a_deviner, f, ensure_ascii=False, indent=4)
+
 scores = {}
-
-livres_a_deviner = [
-    # — NEW ROMANCE —
-    {
-        "indice": "Un bad boy tatoué, une étudiante brisée. Leur attirance est une bombe à retardement.",
-        "reponse": "After"
-    },
-    {
-        "indice": "Il est tout ce qu’elle déteste. Elle est tout ce qu’il désire. Et ils sont coincés ensemble à l’université.",
-        "reponse": "The Deal"
-    },
-
-    # — DARK ROMANCE —
-    {
-        "indice": "Elle est kidnappée par un mafieux. Il jure de la posséder, même si elle le hait.",
-        "reponse": "Captive in the Dark"
-    },
-    {
-        "indice": "Un pacte sanglant, une obsession toxique. Elle ne pourra plus jamais fuir.",
-        "reponse": "Twisted Love"
-    },
-
-    # — ROMANTASY —
-    {
-        "indice": "Elle est promise à un roi immortel. Mais son cœur bat pour un autre…",
-        "reponse": "La Cité de Lait et de Feu"
-    },
-    {
-        "indice": "Une tueuse d'élite est envoyée dans un royaume magique. Entre vengeance et passion, tout vacille.",
-        "reponse": "Throne of Glass"
-    },
-
-    # — FANTASY —
-    {
-        "indice": "Un jeune orphelin découvre qu’il est le descendant d’un ancien peuple ailé.",
-        "reponse": "Eragon"
-    },
-    {
-        "indice": "Un anneau unique, un fardeau immense, et une quête à travers la Terre du Milieu.",
-        "reponse": "Le Seigneur des Anneaux"
-    },
-
-    # — THRILLER / POLICIER —
-    {
-        "indice": "Un meurtre d’enfant dans une petite ville. Le coupable est peut-être celui qu’on aime le plus.",
-        "reponse": "La vérité sur l'affaire Harry Quebert"
-    },
-    {
-        "indice": "Une détective enquête sur un tueur en série qui signe ses meurtres comme une œuvre d’art.",
-        "reponse": "Le Chuchoteur"
-    }
-]
 
 gages = [
     "Chante le refrain de ta chanson honteuse préférée 🎤",
@@ -254,7 +214,39 @@ async def on_message(message):
     elif "verre" in content:
         await message.channel.send("Mais pas plus haut que le bord 🥂")
 
+    # ✅ ICI : gestion des DM pour ajout de livre
+    if isinstance(message.channel, discord.DMChannel):
+        uid = message.author.id
+        if uid in utilisateurs_ajout:
+            etat = utilisateurs_ajout[uid]
+
+            if etat["step"] == 1:
+                etat["indice"] = message.content
+                etat["step"] = 2
+                await message.channel.send("✍️ Parfait ! Maintenant, envoie-moi **le titre exact du livre**.")
+            elif etat["step"] == 2:
+                etat["reponse"] = message.content
+                livres_a_deviner.append({
+                    "indice": etat["indice"],
+                    "reponse": etat["reponse"]
+                })
+                sauvegarder_livres()
+                del utilisateurs_ajout[uid]
+                await message.channel.send("✅ Livre ajouté avec succès ! Merci pour ta contribution 💖")
+
     await bot.process_commands(message)
+
+
+
+@bot.command()
+async def ajoute_livre(ctx):
+    if not isinstance(ctx.channel, discord.DMChannel):
+        await ctx.send("📥 Envoie cette commande **en MP** à Hadès pour ajouter un livre.")
+        return
+
+    utilisateurs_ajout[ctx.author.id] = {"step": 1}
+    await ctx.send("📚 Super ! Envoie-moi maintenant **l’indice** du livre (citation ou résumé).")
+
 
 @bot.command()
 async def apero(ctx):
