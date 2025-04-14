@@ -105,8 +105,9 @@ punchlines = [
     "Tant que je tiens debout, je suis pas bourré(e)"
 "Je suis comme le bon vin, plus je vieillis, plus je suis excellent(e)"
 "Le seul enchaînement que je fais ici: c’est café, boulot, râler"
-"Bonjour à tout le monde, sauf ceux qui disent "pain au chocolat ou chocolatine" (histoire de bien relancer le débat pourri hihi)"
+"Bonjour à tout le monde, sauf ceux qui disent \"pain au chocolat ou chocolatine\" (histoire de bien relancer le débat pourri hihi)"
 ]
+
 
 # ========== BOT READY ==========
 @bot.event
