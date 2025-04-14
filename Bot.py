@@ -67,16 +67,16 @@ disquettes = [
     "Les roses sont rouges, Les violettes sont bleues, Le fleuriste est daltonien, Mais moi j'ai un bon coup de rein.",
     "Pas la peine d'essayer de te débattre, l'amour est plus fort que nous.",
     "La différence entre ma voiture et toi, c'est que toi t'as pas besoin de néons pour briller.",
-    "J'ai besoin d'un bouche à bouche car je viens de me noyer dans votre regard."
-    "T’as pas une carte ? Parce que je me perds dans tes yeux."
-    "T’es comme l’électricité… Tu me fais des étincelles dès que tu m’effleures."
-    "Si la beauté était un crime, tu serais déjà en prison à perpétuité."
-    "Tu dois être une mise à jour, parce que depuis que je t’ai vue, tout bug autour de moi."
-    "T’as une attestation ? Parce que t’as clairement dépassé les limites de la beauté autorisée."
-    "T'es pas une pizza, mais j’te prendrais bien avec supplément câlins."
-    "Même Google ne pourrait pas me trouver quelqu’un comme toi."
-    "Si t’étais une appli, tu serais payante. Et je m’abonnerais à vie."
-    "T’as un prénom, ou je peux t’appeler mienne ?"
+    "J'ai besoin d'un bouche à bouche car je viens de me noyer dans votre regard.",
+    "T’as pas une carte ? Parce que je me perds dans tes yeux.",
+    "T’es comme l’électricité… Tu me fais des étincelles dès que tu m’effleures.",
+    "Si la beauté était un crime, tu serais déjà en prison à perpétuité.",
+    "Tu dois être une mise à jour, parce que depuis que je t’ai vue, tout bug autour de moi.",
+    "T’as une attestation ? Parce que t’as clairement dépassé les limites de la beauté autorisée.",
+    "T'es pas une pizza, mais j’te prendrais bien avec supplément câlins.",
+    "Même Google ne pourrait pas me trouver quelqu’un comme toi.",
+    "Si t’étais une appli, tu serais payante. Et je m’abonnerais à vie.",
+    "T’as un prénom, ou je peux t’appeler mienne ?",
     "Je suis pas photographe, mais je peux nous voir ensemble."
 ]
 
@@ -102,11 +102,12 @@ def sauvegarder_scores():
         
 # ========== PHRASES DE BEAUF ==========
 punchlines = [
-    "Tant que je tiens debout, je suis pas bourré(e)"
-"Je suis comme le bon vin, plus je vieillis, plus je suis excellent(e)"
-"Le seul enchaînement que je fais ici: c’est café, boulot, râler"
-"Bonjour à tout le monde, sauf ceux qui disent \"pain au chocolat ou chocolatine\" (histoire de bien relancer le débat pourri hihi)"
+    "Tant que je tiens debout, je suis pas bourré(e)",
+    "Je suis comme le bon vin, plus je vieillis, plus je suis excellent(e)",
+    "Le seul enchaînement que je fais ici: c’est café, boulot, râler",
+    "Bonjour à tout le monde, sauf ceux qui disent \"pain au chocolat ou chocolatine\" (histoire de bien relancer le débat pourri hihi)"
 ]
+
 
 
 # ========== BOT READY ==========
