@@ -188,16 +188,20 @@ async def paques(ctx):
     await ctx.send(f"{objets[tirage]} (Total: {inventaire_paques[uid][tirage]})")
 
 @bot.command()
-async def panier(ctx):
-    uid = str(ctx.author.id)
+async def panier(ctx, membre: discord.Member = None):
+    membre = membre or ctx.author  # Si rien n’est précisé, on prend l’auteur
+    uid = str(membre.id)
     panier = inventaire_paques.get(uid)
 
     if not panier:
-        await ctx.send("🧺 Ton panier est vide pour l’instant ! Utilise `!paques` pour commencer la chasse.")
+        if membre == ctx.author:
+            await ctx.send("🧺 Ton panier est vide pour l’instant ! Utilise `!paques` pour commencer la chasse.")
+        else:
+            await ctx.send(f"🧺 Le panier de **{membre.display_name}** est vide pour l’instant.")
         return
 
     await ctx.send(
-        f"🧺 **Ton panier de Pâques {ctx.author.display_name}** :\n"
+        f"🧺 **Panier de Pâques de {membre.display_name}** :\n"
         f"🥚 Œufs pourris : {panier['oeuf_pourri']}\n"
         f"🍫 Chocolats : {panier['chocolat']}\n"
         f"🐔 Poules : {panier['poule']}\n"
