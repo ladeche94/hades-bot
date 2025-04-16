@@ -12,6 +12,17 @@ utilisateurs_ajout = {}
 
 salon_alertes_id = 1359933488324809067
 
+if os.path.exists("inventaire_paques.json"):
+    with open("inventaire_paques.json", "r", encoding="utf-8") as f:
+        inventaire_paques = json.load(f)
+else:
+    inventaire_paques = {}
+
+def sauvegarder_inventaire_paques():
+    with open("inventaire_paques.json", "w", encoding="utf-8") as f:
+        json.dump(inventaire_paques, f, ensure_ascii=False, indent=4)
+
+
 if os.path.exists("livres.json"):
     with open("livres.json", "r", encoding="utf-8") as f:
         livres_a_deviner = json.load(f)
