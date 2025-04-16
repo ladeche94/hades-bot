@@ -9,6 +9,9 @@ import json
 import os
 import zipfile
 import datetime
+from discord.ext import tasks
+from datetime import datetime
+
 
 utilisateurs_ajout = {}
 
