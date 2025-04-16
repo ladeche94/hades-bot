@@ -268,6 +268,15 @@ async def export_paques(ctx):
     except Exception as e:
         await ctx.send(f"❌ Erreur pendant l’export : {e}")
 
+
+@bot.command()
+@commands.has_permissions(manage_guild=True)  # ou administrator=True selon ton rôle
+async def reset_paques(ctx):
+    global inventaire_paques
+    inventaire_paques = {}
+    sauvegarder_inventaire_paques()
+    await ctx.send("⚠️ Tous les paniers de Pâques ont été réinitialisés. La chasse redémarre à zéro !")
+
 @bot.command()
 async def livre(ctx):
     livre = random.choice(livres_a_deviner)
