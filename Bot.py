@@ -2,7 +2,6 @@ import discord
 from discord.ext import commands
 from dotenv import load_dotenv
 import os
-import yt_dlp as youtube_dl
 import random
 import asyncio
 import random
