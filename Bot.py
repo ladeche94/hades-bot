@@ -155,6 +155,54 @@ async def help(ctx):
     )
     await ctx.send(embed=embed)
 
+
+@bot.command()
+async def paques(ctx):
+    tirage = random.choices(
+        population=["oeuf_pourri", "chocolat", "poule", "lapin"],
+        weights=[50, 30, 15, 5],
+        k=1
+    )[0]
+
+    objets = {
+        "oeuf_pourri": "🥚 Oh non ! Un œuf pourri... Ça pue dans ton panier.",
+        "chocolat": "🍫 Miam ! Tu as trouvé un délicieux chocolat !",
+        "poule": "🐔 Bravo ! Une poule en chocolat, c’est rare ça !",
+        "lapin": "🐇 INCROYABLE ! Un lapin en or pur ! Tu fais partie de l’élite."
+    }
+
+    uid = str(ctx.author.id)
+    if uid not in inventaire_paques:
+        inventaire_paques[uid] = {
+            "oeuf_pourri": 0,
+            "chocolat": 0,
+            "poule": 0,
+            "lapin": 0
+        }
+
+    inventaire_paques[uid][tirage] += 1
+    sauvegarder_inventaire_paques()
+
+    await ctx.send(f"{objets[tirage]} (Total: {inventaire_paques[uid][tirage]})")
+
+@bot.command()
+async def panier(ctx):
+    uid = str(ctx.author.id)
+    panier = inventaire_paques.get(uid)
+
+    if not panier:
+        await ctx.send("🧺 Ton panier est vide pour l’instant ! Utilise `!paques` pour commencer la chasse.")
+        return
+
+    await ctx.send(
+        f"🧺 **Ton panier de Pâques {ctx.author.display_name}** :\n"
+        f"🥚 Œufs pourris : {panier['oeuf_pourri']}\n"
+        f"🍫 Chocolats : {panier['chocolat']}\n"
+        f"🐔 Poules : {panier['poule']}\n"
+        f"🐇 Lapins : {panier['lapin']}"
+    )
+
+
 @bot.command()
 async def livre(ctx):
     livre = random.choice(livres_a_deviner)
