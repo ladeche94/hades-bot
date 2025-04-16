@@ -298,6 +298,52 @@ async def export_anniversaires(ctx):
         os.remove(zip_filename)
     except Exception as e:
         await ctx.send(f"❌ Erreur pendant l’export : {e}")
+        
+@bot.command()
+@commands.has_permissions(administrator=True)
+async def anniversaires(ctx):
+    if not os.path.exists("anniversaires.json"):
+        await ctx.send("📭 Aucun anniversaire enregistré pour le moment.")
+        return
+
+    with open("anniversaires.json", "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    if not data:
+        await ctx.send("📭 Aucun anniversaire enregistré pour le moment.")
+        return
+
+    message = "🎂 **Anniversaires enregistrés** :\n\n"
+    for uid, date in data.items():
+        try:
+            user = await bot.fetch_user(int(uid))
+            message += f"• {user.name} : {date}\n"
+        except:
+            message += f"• Utilisateur inconnu ({uid}) : {date}\n"
+
+    await ctx.send(message)
+
+@bot.command()
+async def modif_anniv(ctx, date: str):
+    """Modifie la date d'anniversaire (format : MM-JJ)"""
+    import re
+
+    if not re.match(r"^\d{2}-\d{2}$", date):
+        return await ctx.send("📅 Format invalide ! Utilise **MM-JJ**, exemple `04-25`.")
+
+    uid = str(ctx.author.id)
+    data = {}
+
+    if os.path.exists("anniversaires.json"):
+        with open("anniversaires.json", "r", encoding="utf-8") as f:
+            data = json.load(f)
+
+    data[uid] = date
+    with open("anniversaires.json", "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=4)
+
+    await ctx.send(f"✏️ Ton anniversaire a bien été **mis à jour** pour le `{date}`, {ctx.author.mention} !")
+
 
 
 @bot.command()
