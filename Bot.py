@@ -469,6 +469,31 @@ async def on_message(message):
                 del utilisateurs_ajout[uid]
                 await message.channel.send("✅ Livre ajouté avec succès ! Merci pour ta contribution 💖")
 
+        # ✅ CONFESSIONS ANONYMES
+    if isinstance(message.channel, discord.DMChannel):
+        content = message.content.strip()
+
+        if content.lower().startswith("confess:"):
+            confession = content[len("confess:"):].strip()
+
+            if confession:
+                # Envoi dans le salon public de confessions (anonyme)
+                public_channel = bot.get_channel(1362050728251621588)
+                if public_channel:
+                    await public_channel.send(f"📢 **Confession anonyme :**\n{confession}")
+
+                # Envoi dans le salon de modération avec l’auteur
+                mod_channel = bot.get_channel(1359933488324809067)
+                if mod_channel:
+                    await mod_channel.send(
+                        f"🕵️ **Confession reçue de {message.author} ({message.author.id})** :\n{confession}"
+                    )
+
+                await message.channel.send("✅ Ta confession a bien été envoyée anonymement. Merci pour ta confiance 🖤")
+            else:
+                await message.channel.send("❌ Tu dois écrire une confession après `confess:`.")
+
+
     await bot.process_commands(message)
 
 @bot.command()
