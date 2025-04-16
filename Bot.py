@@ -204,7 +204,6 @@ async def panier(ctx):
         f"🐇 Lapins : {panier['lapin']}"
     )
 
-
 @bot.command()
 @commands.has_permissions(administrator=True)
 async def chasseclassement(ctx):
@@ -215,17 +214,32 @@ async def chasseclassement(ctx):
     classement = []
 
     for user_id, objets in inventaire_paques.items():
-        total_utiles = objets["chocolat"] + objets["poule"] + objets["lapin"]
+        total_utiles = (
+            objets.get("chocolat", 0) +
+            objets.get("poule", 0) +
+            objets.get("lapin", 0)
+        )
         classement.append((user_id, total_utiles))
 
     classement = sorted(classement, key=lambda x: x[1], reverse=True)
 
+    if not classement or all(score == 0 for _, score in classement):
+        await ctx.send("📭 Personne n’a encore trouvé d’objet utile.")
+        return
+
     message = "🥇 **Classement des plus grands chasseurs de Pâques** 🧺\n\n"
     for i, (user_id, total) in enumerate(classement[:5], start=1):
-        user = await bot.fetch_user(int(user_id))
-        message += f"{i}. {user.name} — {total} objet(s) utiles récoltés\n"
+        try:
+            user = await bot.fetch_user(int(user_id))
+            username = user.name
+        except Exception as e:
+            username = f"Utilisateur inconnu ({user_id})"
+            print(f"⚠️ Erreur fetch_user : {e}")
+
+        message += f"{i}. {username} — {total} objet(s) utiles récoltés\n"
 
     await ctx.send(message)
+
 
 @bot.command()
 @commands.has_permissions(administrator=True)
