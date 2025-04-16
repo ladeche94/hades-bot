@@ -7,6 +7,8 @@ import asyncio
 import random
 import json
 import os
+import zipfile
+import datetime
 
 utilisateurs_ajout = {}
 
@@ -225,6 +227,25 @@ async def chasseclassement(ctx):
 
     await ctx.send(message)
 
+@bot.command()
+@commands.has_permissions(administrator=True)
+async def export_paques(ctx):
+    sauvegarder_inventaire_paques()  # Assure qu'on écrit les dernières données
+
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    zip_filename = f"export_inventaire_paques_{timestamp}.zip"
+
+    try:
+        # Crée le zip contenant le fichier JSON
+        with zipfile.ZipFile(zip_filename, "w", zipfile.ZIP_DEFLATED) as zipf:
+            zipf.write("inventaire_paques.json")
+
+        # Envoie le fichier zip dans le salon ou en MP
+        await ctx.send(file=discord.File(zip_filename))
+        os.remove(zip_filename)  # Nettoyage du zip temporaire après envoi
+
+    except Exception as e:
+        await ctx.send(f"❌ Erreur pendant l’export : {e}")
 
 @bot.command()
 async def livre(ctx):
