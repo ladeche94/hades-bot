@@ -281,6 +281,26 @@ async def reset_paques(ctx):
     await ctx.send("⚠️ Tous les paniers de Pâques ont été réinitialisés. La chasse redémarre à zéro !")
 
 @bot.command()
+@commands.has_permissions(administrator=True)
+async def export_anniversaires(ctx):
+    if not os.path.exists("anniversaires.json"):
+        await ctx.send("📭 Aucun anniversaire enregistré pour le moment.")
+        return
+
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    zip_filename = f"export_anniversaires_{timestamp}.zip"
+
+    try:
+        with zipfile.ZipFile(zip_filename, "w", zipfile.ZIP_DEFLATED) as zipf:
+            zipf.write("anniversaires.json")
+
+        await ctx.send(file=discord.File(zip_filename))
+        os.remove(zip_filename)
+    except Exception as e:
+        await ctx.send(f"❌ Erreur pendant l’export : {e}")
+
+
+@bot.command()
 async def livre(ctx):
     livre = random.choice(livres_a_deviner)
     ctx.bot.devine_livre_en_cours = livre  # On garde l'énigme active
