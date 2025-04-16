@@ -204,6 +204,29 @@ async def panier(ctx):
 
 
 @bot.command()
+@commands.has_permissions(administrator=True)
+async def chasseclassement(ctx):
+    if not inventaire_paques:
+        await ctx.send("🥚 Personne n’a encore participé à la chasse aux œufs.")
+        return
+
+    classement = []
+
+    for user_id, objets in inventaire_paques.items():
+        total_utiles = objets["chocolat"] + objets["poule"] + objets["lapin"]
+        classement.append((user_id, total_utiles))
+
+    classement = sorted(classement, key=lambda x: x[1], reverse=True)
+
+    message = "🥇 **Classement des plus grands chasseurs de Pâques** 🧺\n\n"
+    for i, (user_id, total) in enumerate(classement[:5], start=1):
+        user = await bot.fetch_user(int(user_id))
+        message += f"{i}. {user.name} — {total} objet(s) utiles récoltés\n"
+
+    await ctx.send(message)
+
+
+@bot.command()
 async def livre(ctx):
     livre = random.choice(livres_a_deviner)
     ctx.bot.devine_livre_en_cours = livre  # On garde l'énigme active
