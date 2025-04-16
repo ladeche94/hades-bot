@@ -433,6 +433,48 @@ async def pfc(ctx, choix: str):
         await ctx.send("💀 Boum ! Hadès gagne, comme d'hab.")
 
 
+@bot.command()
+async def anniversaire(ctx, date: str):
+    """Format attendu : MM-JJ (ex: 04-25)"""
+    import re
+
+    if not re.match(r"^\d{2}-\d{2}$", date):
+        return await ctx.send("📅 Format invalide ! Utilise **MM-JJ**, exemple `04-25`.")
+
+    uid = str(ctx.author.id)
+    if os.path.exists("anniversaires.json"):
+        with open("anniversaires.json", "r", encoding="utf-8") as f:
+            data = json.load(f)
+    else:
+        data = {}
+
+    data[uid] = date
+    with open("anniversaires.json", "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=4)
+
+    await ctx.send(f"✅ C’est noté {ctx.author.mention}, Hadès n’oubliera pas ta date : `{date}` !")
+
+@tasks.loop(hours=24)
+async def check_anniversaires():
+    from datetime import datetime
+
+    today = datetime.now().strftime("%m-%d")
+
+    if not os.path.exists("anniversaires.json"):
+        return
+
+    with open("anniversaires.json", "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    for uid, date in data.items():
+        if date == today:
+            user = await bot.fetch_user(int(uid))
+            for guild in bot.guilds:
+                channel = discord.utils.get(guild.text_channels, name="🎉anniversaires")  # à adapter
+                if channel:
+                    await channel.send(f"🎂 Aujourd’hui, c’est l’anniversaire de {user.mention} ! On lui souhaite un max de bonheur et de pastaga 🍾🎈")
+
+
 @bot.command(name='boulette')
 async def boulette(ctx):
     await ctx.send('💥 Oh là là... LA BOULETTE !')
