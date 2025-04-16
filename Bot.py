@@ -469,13 +469,18 @@ async def check_anniversaires():
     with open("anniversaires.json", "r", encoding="utf-8") as f:
         data = json.load(f)
 
+    anniv_channel_id = 1356263179260399648  # <--- Ton salon anniversaire ici !
+
     for uid, date in data.items():
         if date == today:
             user = await bot.fetch_user(int(uid))
             for guild in bot.guilds:
-                channel = discord.utils.get(guild.text_channels, name="🎉anniversaires")  # à adapter
+                channel = guild.get_channel(anniv_channel_id)
                 if channel:
-                    await channel.send(f"🎂 Aujourd’hui, c’est l’anniversaire de {user.mention} ! On lui souhaite un max de bonheur et de pastaga 🍾🎈")
+                    await channel.send(
+                        f"🎂 Aujourd’hui, c’est l’anniversaire de {user.mention} ! "
+                        "On lui souhaite un max de bonheur et de pastaga 🍾🎈"
+                    )
 
 
 @bot.command(name='boulette')
