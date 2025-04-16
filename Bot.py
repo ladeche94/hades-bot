@@ -204,6 +204,7 @@ async def panier(ctx):
         f"🐇 Lapins : {panier['lapin']}"
     )
 
+
 @bot.command()
 @commands.has_permissions(administrator=True)
 async def chasseclassement(ctx):
@@ -230,8 +231,10 @@ async def chasseclassement(ctx):
     message = "🥇 **Classement des plus grands chasseurs de Pâques** 🧺\n\n"
     for i, (user_id, total) in enumerate(classement[:5], start=1):
         try:
-            user = await bot.fetch_user(int(user_id))
-            username = user.name
+            user_obj = bot.get_user(int(user_id))  # d’abord rapide
+            if not user_obj:
+                user_obj = await bot.fetch_user(int(user_id))  # puis si besoin, plus long
+            username = user_obj.name
         except Exception as e:
             username = f"Utilisateur inconnu ({user_id})"
             print(f"⚠️ Erreur fetch_user : {e}")
