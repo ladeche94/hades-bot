@@ -155,6 +155,11 @@ async def help(ctx):
     embed.add_field(name="!lovecalc @pseudo1 @pseudo2", value="Calcule la compatibilité amoureuse entre deux personnes 💘", inline=False)
     embed.add_field(name="!setup_roles (admin)", value="Ajoute les réactions pour gérer les rôles sur les bons messages ⚙️", inline=False)
     embed.add_field(
+    name="!confess [ton secret]",
+    value="Envoie une confession **en MP à Hadès** et elle sera publiée anonymement dans le salon dédié 😳\n*Exemple :* `!confess J’ai volé un cookie au bureau et accusé le stagiaire.`",
+    inline=False
+)
+    embed.add_field(
         name="✨ Réponses automatiques",
         value="• Tape **santé** → Hadès répond *Mais pas des pieds 🍻*\n"
               "• Tape **verre** → Hadès répond *Mais pas plus haut que le bord 🥂*",
