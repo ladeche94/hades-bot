@@ -16,6 +16,8 @@ from datetime import datetime
 utilisateurs_ajout = {}
 
 salon_alertes_id = 1359933488324809067
+salon_paques_id = 1362494740947537960
+
 
 if os.path.exists("inventaire_paques.json"):
     with open("inventaire_paques.json", "r", encoding="utf-8") as f:
@@ -170,6 +172,9 @@ async def help(ctx):
 
 @bot.command()
 async def paques(ctx):
+    if ctx.channel.id != salon_paques_id:
+        return await ctx.send("❌ Cette commande ne peut être utilisée que dans le salon dédié à la chasse aux œufs !")
+
     tirage = random.choices(
         population=["oeuf_pourri", "chocolat", "poule", "lapin"],
         weights=[50, 30, 15, 5],
@@ -196,6 +201,7 @@ async def paques(ctx):
     sauvegarder_inventaire_paques()
 
     await ctx.send(f"{objets[tirage]} (Total: {inventaire_paques[uid][tirage]})")
+
 
 @bot.command()
 async def panier(ctx, membre: discord.Member = None):
