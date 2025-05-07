@@ -169,130 +169,6 @@ async def help(ctx):
     )
     await ctx.send(embed=embed)
 
-
-@bot.command()
-async def paques(ctx):
-    if ctx.channel.id != salon_paques_id:
-        return await ctx.send("❌ Cette commande ne peut être utilisée que dans le salon dédié à la chasse aux œufs !")
-
-    tirage = random.choices(
-        population=["oeuf_pourri", "chocolat", "poule", "lapin"],
-        weights=[50, 30, 15, 5],
-        k=1
-    )[0]
-
-    objets = {
-        "oeuf_pourri": "🥚 Oh non ! Un œuf pourri... Ça pue dans ton panier.",
-        "chocolat": "🍫 Miam ! Tu as trouvé un délicieux chocolat !",
-        "poule": "🐔 Bravo ! Une poule en chocolat, c’est rare ça !",
-        "lapin": "🐇 INCROYABLE ! Un lapin en or pur ! Tu fais partie de l’élite."
-    }
-
-    uid = str(ctx.author.id)
-    if uid not in inventaire_paques:
-        inventaire_paques[uid] = {
-            "oeuf_pourri": 0,
-            "chocolat": 0,
-            "poule": 0,
-            "lapin": 0
-        }
-
-    inventaire_paques[uid][tirage] += 1
-    sauvegarder_inventaire_paques()
-
-    await ctx.send(f"{objets[tirage]} (Total: {inventaire_paques[uid][tirage]})")
-
-
-@bot.command()
-async def panier(ctx, membre: discord.Member = None):
-    membre = membre or ctx.author  # Si rien n’est précisé, on prend l’auteur
-    uid = str(membre.id)
-    panier = inventaire_paques.get(uid)
-
-    if not panier:
-        if membre == ctx.author:
-            await ctx.send("🧺 Ton panier est vide pour l’instant ! Utilise `!paques` pour commencer la chasse.")
-        else:
-            await ctx.send(f"🧺 Le panier de **{membre.display_name}** est vide pour l’instant.")
-        return
-
-    await ctx.send(
-        f"🧺 **Panier de Pâques de {membre.display_name}** :\n"
-        f"🥚 Œufs pourris : {panier['oeuf_pourri']}\n"
-        f"🍫 Chocolats : {panier['chocolat']}\n"
-        f"🐔 Poules : {panier['poule']}\n"
-        f"🐇 Lapins : {panier['lapin']}"
-    )
-
-
-@bot.command()
-@commands.has_permissions(administrator=True)
-async def chasseclassement(ctx):
-    if not inventaire_paques:
-        await ctx.send("🥚 Personne n’a encore participé à la chasse aux œufs.")
-        return
-
-    classement = []
-
-    for user_id, objets in inventaire_paques.items():
-        total_utiles = (
-            objets.get("chocolat", 0) +
-            objets.get("poule", 0) +
-            objets.get("lapin", 0)
-        )
-        classement.append((user_id, total_utiles))
-
-    classement = sorted(classement, key=lambda x: x[1], reverse=True)
-
-    if not classement or all(score == 0 for _, score in classement):
-        await ctx.send("📭 Personne n’a encore trouvé d’objet utile.")
-        return
-
-    message = "🥇 **Classement des plus grands chasseurs de Pâques** 🧺\n\n"
-    for i, (user_id, total) in enumerate(classement[:5], start=1):
-        try:
-            user_obj = bot.get_user(int(user_id))  # d’abord rapide
-            if not user_obj:
-                user_obj = await bot.fetch_user(int(user_id))  # puis si besoin, plus long
-            username = user_obj.name
-        except Exception as e:
-            username = f"Utilisateur inconnu ({user_id})"
-            print(f"⚠️ Erreur fetch_user : {e}")
-
-        message += f"{i}. {username} — {total} objet(s) utiles récoltés\n"
-
-    await ctx.send(message)
-
-
-@bot.command()
-@commands.has_permissions(administrator=True)
-async def export_paques(ctx):
-    sauvegarder_inventaire_paques()  # Assure qu'on écrit les dernières données
-
-    timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    zip_filename = f"export_inventaire_paques_{timestamp}.zip"
-
-    try:
-        # Crée le zip contenant le fichier JSON
-        with zipfile.ZipFile(zip_filename, "w", zipfile.ZIP_DEFLATED) as zipf:
-            zipf.write("inventaire_paques.json")
-
-        # Envoie le fichier zip dans le salon ou en MP
-        await ctx.send(file=discord.File(zip_filename))
-        os.remove(zip_filename)  # Nettoyage du zip temporaire après envoi
-
-    except Exception as e:
-        await ctx.send(f"❌ Erreur pendant l’export : {e}")
-
-
-@bot.command()
-@commands.has_permissions(manage_guild=True)  # ou administrator=True selon ton rôle
-async def reset_paques(ctx):
-    global inventaire_paques
-    inventaire_paques = {}
-    sauvegarder_inventaire_paques()
-    await ctx.send("⚠️ Tous les paniers de Pâques ont été réinitialisés. La chasse redémarre à zéro !")
-
 @bot.command()
 @commands.has_permissions(administrator=True)
 async def export_anniversaires(ctx):
@@ -448,6 +324,8 @@ async def on_message(message):
         await message.channel.send("Mais pas des pieds 🍻")
     elif "verre" in content:
         await message.channel.send("Mais pas plus haut que le bord 🥂")
+    elif "aigri" in content or "aigrie" in content:
+        await message.channel.send("💥 Je vais tout casser 💢")
 
     # ✅ ICI : gestion des DM pour ajout de livre
     if isinstance(message.channel, discord.DMChannel):
